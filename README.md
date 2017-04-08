@@ -1,3 +1,12 @@
+this README.md is memo of developping this app.
+this contains 
+- Library
+ - which is used in this project
+- Bugs 
+ - which is appeared in development
+- Notice
+- and so on
+
 - [画像ライブラリPicassoの使い方](http://qiita.com/hotchemi/items/33ebd5faa42d2d05c2b6)
 画像処理ライブラリ
 
