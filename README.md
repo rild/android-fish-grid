@@ -7,6 +7,10 @@ this contains
 - Notice
 - and so on
 
+# Records
+[progress](./memo/progree.md)
+
+# 
 - [画像ライブラリPicassoの使い方](http://qiita.com/hotchemi/items/33ebd5faa42d2d05c2b6)
 画像処理ライブラリ
 
@@ -18,11 +22,6 @@ I didn't need the library Picasso
 
 http://seesaawiki.jp/w/moonlight_aska/d/BMP%B2%E8%C1%FC%A4%F2%A5%EA%A5%B5%A5%A4%A5%BA%A4%B9%A4%EB
 
-just
-
-```
-
-```
 
 memo
 
