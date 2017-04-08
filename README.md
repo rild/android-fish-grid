@@ -1,9 +1,9 @@
 this README.md is memo of developping this app.
 this contains 
 - Library
- - which is used in this project
+ which is used in this project
 - Bugs 
- - which is appeared in development
+ which is appeared in development
 - Notice
 - and so on
 
