@@ -6,10 +6,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import java.util.Random;
 
 /**
  * Created by rild on 2017/04/08.
@@ -19,10 +22,10 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     static final long FPS = 30;
     static final long FRAME_TIME = 1000 / FPS;
 
-    private final int SCREEN_ROW = 5;
-    private final int SCREEN_COLUMN = 4;
-    private final int MAP_ROW = 10;
-    private final int MAP_COLUMN = 7;
+    private final int SCREEN_ROW = 10;
+    private final int SCREEN_COLUMN = 8;
+    private final int MAP_ROW = 20;
+    private final int MAP_COLUMN = 14;
 
     private int screenWidth, screenHeight;
     private SurfaceHolder surfaceHolder;
@@ -38,8 +41,12 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     private Bitmap fishImg;
     private Bitmap rockImg;
     private Bitmap smallFishImg;
+    private Bitmap[] seaFloorImgs = new Bitmap[3];
 
     OnLogsUpdateListener onLogsUpdateListener;
+
+    int collisionCount;
+    int fishCount;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -50,6 +57,9 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         fishImg = BitmapFactory.decodeResource(res, R.drawable.fish);
         rockImg = BitmapFactory.decodeResource(res, R.drawable.rock);
         smallFishImg = BitmapFactory.decodeResource(res, R.drawable.small_fish);
+        seaFloorImgs[0] = BitmapFactory.decodeResource(res, R.drawable.sea_floor0);
+        seaFloorImgs[1] = BitmapFactory.decodeResource(res, R.drawable.sea_floor3);
+        seaFloorImgs[2] = BitmapFactory.decodeResource(res, R.drawable.sea_floor2);
 
 
         // create pannels
@@ -60,12 +70,15 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         }
 
 
-        screenRow0OnMap = 5;
+        screenRow0OnMap = MAP_ROW - SCREEN_ROW;
         screenColum0OnMap = 0;
 
-        player = new Player(2, 1);
+        player = new Player(SCREEN_ROW - 1, 1);
         map = new Map(MAP_ROW, MAP_COLUMN);
         map.createMap();
+
+        collisionCount = 0;
+        fishCount = 0;
     }
 
     @Override
@@ -88,13 +101,19 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         fishImg = Bitmap.createScaledBitmap(fishImg, w, h, false);
         rockImg = Bitmap.createScaledBitmap(rockImg, w, h, false);
         smallFishImg = Bitmap.createScaledBitmap(smallFishImg, w, h, false);
+        for (int i = 0; i < seaFloorImgs.length; i++) {
+            seaFloorImgs[i] = Bitmap.createScaledBitmap(seaFloorImgs[i], w, h, false);
+        }
+
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         surfaceHolder = holder;
-        thread = new Thread(this);
-        thread.start();
+//        thread = new Thread(this);
+//        thread.start();
+        holder.setFormat(PixelFormat.TRANSPARENT); // to call surfaceChanged callback method
+        update();
     }
 
     @Override
@@ -110,11 +129,14 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         switch (object) {
             case ROCK:
                 LogMessageManager.add("Player", "Prohibited Area");
+                collisionCount++;
                 onLogsUpdateListener.onLogsUpdate();
                 break;
             case SMALL_FISH:
                 map.removeSmallFishAt(row, column);
                 LogMessageManager.add("Player", "got small fish");
+                Random random = new Random();
+                fishCount += random.nextInt(10) + 1;
                 onLogsUpdateListener.onLogsUpdate();
         }
     }
@@ -230,6 +252,8 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 }
                 break;
         }
+
+        update();
     }
 
     private void mapShift(Direction dir) {
@@ -251,6 +275,41 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                     screenRow0OnMap++;
                 break;
         }
+    }
+
+    private void update() {
+
+        Canvas canvas = surfaceHolder.lockCanvas();
+
+//        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        canvas.drawColor(Color.WHITE);
+
+        Random random = new Random();
+
+        for (int i = 0; i < SCREEN_ROW; i++) {
+            for (int j = 0; j < SCREEN_COLUMN; j++) {
+                int r = random.nextInt(100);
+                if (r < 1) {
+                    canvas.drawBitmap(seaFloorImgs[1], screenPannels[i][j].screenX, screenPannels[i][j].screenY, null);
+                } else if (r < 5) {
+                    canvas.drawBitmap(seaFloorImgs[2], screenPannels[i][j].screenX, screenPannels[i][j].screenY, null);
+                } else {
+                    canvas.drawBitmap(seaFloorImgs[0], screenPannels[i][j].screenX, screenPannels[i][j].screenY, null);
+                }
+
+                if (map.hasRockcAt(i + screenRow0OnMap, j + screenColum0OnMap))
+                    canvas.drawBitmap(rockImg, screenPannels[i][j].screenX, screenPannels[i][j].screenY, null);
+                if (map.hasSmallFishAt(i + screenRow0OnMap, j + screenColum0OnMap))
+                    canvas.drawBitmap(smallFishImg, screenPannels[i][j].screenX, screenPannels[i][j].screenY, null);
+            }
+        }
+
+        canvas.drawBitmap(fishImg,
+                screenPannels[player.row][player.column].screenX,
+                screenPannels[player.row][player.column].screenY,
+                null);
+
+        surfaceHolder.unlockCanvasAndPost(canvas);
     }
 
     @Override
@@ -277,8 +336,8 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                     screenPannels[player.row][player.column].screenY,
                     null);
 
-
             surfaceHolder.unlockCanvasAndPost(canvas);
+
             try {
                 Thread.sleep(FRAME_TIME);
             } catch (InterruptedException e) {
@@ -340,6 +399,15 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             mapObjects[7][2] = GameObjectKind.ROCK;
 
             mapObjects[8][3] = GameObjectKind.SMALL_FISH;
+
+            mapObjects[10][7] = GameObjectKind.ROCK;
+            mapObjects[10][8] = GameObjectKind.SMALL_FISH;
+            mapObjects[10][9] = GameObjectKind.ROCK;
+
+            mapObjects[12][1] = GameObjectKind.SMALL_FISH;
+            mapObjects[12][2] = GameObjectKind.SMALL_FISH;
+            mapObjects[13][2] = GameObjectKind.SMALL_FISH;
+
         }
 
         public boolean hasSomethingAt(int row, int column) {
@@ -365,7 +433,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
 
     enum GameObjectKind {
-        FISH, ROCK, SMALL_FISH;
+        NONE, FISH, ROCK, SMALL_FISH;
     }
 
     enum Direction {

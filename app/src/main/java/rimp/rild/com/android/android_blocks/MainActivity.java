@@ -22,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout mLogMessageContainer;
     private ImageView mButtonDropUpDwon;
 
+    private TextView mTextCollisionCount;
+    private TextView mTextFishCount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
         mButtonDelete = (ImageView) findViewById(R.id.button_delete);
         mLogMessageContainer = (LinearLayout) findViewById(R.id.main_log_message_container);
         mButtonDropUpDwon = (ImageView) findViewById(R.id.button_drop_up_and_down);
+
+        mTextCollisionCount = (TextView) findViewById(R.id.main_text_collision_count);
+        mTextFishCount = (TextView) findViewById(R.id.main_text_fish_count);
 
         ViewGroup.LayoutParams params = mLogMessageContainer.getLayoutParams();
         params.height = 0;
@@ -79,28 +85,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         mButtonRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mGameView.movePlayer(GameView.Direction.Right);
+                mTextCollisionCount.setText(String.valueOf(mGameView.collisionCount));
+                mTextFishCount.setText(String.valueOf(mGameView.fishCount));
             }
         });
         mButtonLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mGameView.movePlayer(GameView.Direction.Left);
+                mTextCollisionCount.setText(String.valueOf(mGameView.collisionCount));
+                mTextFishCount.setText(String.valueOf(mGameView.fishCount));
             }
         });
         mButtonUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mGameView.movePlayer(GameView.Direction.Up);
+                mTextCollisionCount.setText(String.valueOf(mGameView.collisionCount));
+                mTextFishCount.setText(String.valueOf(mGameView.fishCount));
             }
         });
         mButtonDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mGameView.movePlayer(GameView.Direction.Down);
+                mTextCollisionCount.setText(String.valueOf(mGameView.collisionCount));
+                mTextFishCount.setText(String.valueOf(mGameView.fishCount));
             }
         });
     }
