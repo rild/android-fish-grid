@@ -1,3 +1,30 @@
+
+
+`MainActivity.java`
+
+```
+
+//                    ViewGroup.LayoutParams params = mLogMessageContainer.getLayoutParams();
+//                    params.height = (int) getResources().getDimension(R.dimen.main_log_message_container_opened); // opened
+//                    mLogMessageContainer.setLayoutParams(params);
+
+//                    ResizeAnimation resizeAnimation = new ResizeAnimation(
+//                            mLogMessageContainer,
+//                            (int) getResources().getDimension(R.dimen.main_log_message_container_opened),
+//                            mLogMessageContainer.getLayoutParams().height
+//                    );
+//                    resizeAnimation.setDuration(300);
+//                    mLogMessageContainer.startAnimation(resizeAnimation);
+
+//                    ResizeAnimation.expand(mLogMessageContainer);
+
+```
+
+code 
+
+`ResizeAnimation.java`
+
+```
 package rimp.rild.com.android.android_blocks;
 
 import android.view.View;
@@ -5,11 +32,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
-/**
- * Created by rild on 2017/04/08.
- */
-
 public class ResizeAnimation extends Animation {
+    // TODO this resize animation cannot apply [HOGE to 0 animation]
     final int targetHeight;
     View view;
     int startHeight;
@@ -94,3 +118,4 @@ public class ResizeAnimation extends Animation {
         v.startAnimation(a);
     }
 }
+```

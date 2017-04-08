@@ -38,6 +38,8 @@ expand/collapse animation
 
  http://stackoverflow.com/questions/4946295/android-expand-collapse-animation
  http://stackoverflow.com/questions/8063466/how-to-expand-a-layout-height-with-animation
+ 
+ [more](./memo/gui_animation.md)
 
 # Resources
 Material Icons

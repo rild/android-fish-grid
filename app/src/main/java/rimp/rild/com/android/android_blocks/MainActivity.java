@@ -50,37 +50,17 @@ public class MainActivity extends AppCompatActivity {
                     mButtonDropUpDwon.setImageResource(R.drawable.icon_array_drop_up);
                     mButtonDropUpDwon.setTag("icon_array_drop_up");
 
-//                    ViewGroup.LayoutParams params = mLogMessageContainer.getLayoutParams();
-//                    params.height = (int) getResources().getDimension(R.dimen.main_log_message_container_opened); // opened
-//                    mLogMessageContainer.setLayoutParams(params);
-
-//                    ResizeAnimation resizeAnimation = new ResizeAnimation(
-//                            mLogMessageContainer,
-//                            (int) getResources().getDimension(R.dimen.main_log_message_container_opened),
-//                            mLogMessageContainer.getLayoutParams().height
-//                    );
-//                    resizeAnimation.setDuration(300);
-//                    mLogMessageContainer.startAnimation(resizeAnimation);
-
-                    ResizeAnimation.expand(mLogMessageContainer);
+                    HeightAnimation hanime = new HeightAnimation(mLogMessageContainer, 0, 150);
+                    hanime.setDuration(300);
+                    mLogMessageContainer.startAnimation(hanime);
 
                 } else { // icon_array_drop_up
                     mButtonDropUpDwon.setImageResource(R.drawable.icon_array_drop_down);
                     mButtonDropUpDwon.setTag("icon_array_drop_down");
 
-//                    ViewGroup.LayoutParams params = mLogMessageContainer.getLayoutParams();
-//                    params.height = (int) getResources().getDimension(R.dimen.main_log_message_container_closed); // closed
-//                    mLogMessageContainer.setLayoutParams(params);
-
-//                    ResizeAnimation resizeAnimation = new ResizeAnimation(
-//                            mLogMessageContainer,
-//                            0,
-//                            (int) getResources().getDimension(R.dimen.main_log_message_container_opened)
-//                    );
-//                    resizeAnimation.setDuration(300);
-//                    mLogMessageContainer.startAnimation(resizeAnimation);
-
-                    ResizeAnimation.collapse(mLogMessageContainer);
+                    HeightAnimation hanime = new HeightAnimation(mLogMessageContainer, 150, 0);
+                    hanime.setDuration(300);
+                    mLogMessageContainer.startAnimation(hanime);
                 }
             }
         });
