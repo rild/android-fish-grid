@@ -8,7 +8,7 @@ this contains
 - and so on
 
 # Records
-[progress](./memo/progree.md)
+[progress](./memo/progress.md)
 
 # 
 - [画像ライブラリPicassoの使い方](http://qiita.com/hotchemi/items/33ebd5faa42d2d05c2b6)
